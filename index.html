@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Trainer — Learn Cron Expressions with Quizzes</title>
+<meta name="description" content="Interactive cron expression learning tool with quizzes, practice mode, and visual timelines. Master cron syntax from beginner to advanced.">
+<meta property="og:title" content="Cron Trainer — Learn Cron Expressions with Quizzes">
+<meta property="og:description" content="Learn cron expressions through interactive lessons, quizzes, and visual timelines. Beginner to advanced difficulty levels.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cron-trainer.pages.dev">
+<meta property="og:image" content="https://cron-trainer.pages.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cron Trainer — Learn Cron Expressions with Quizzes">
+<meta name="twitter:description" content="Master cron expressions with interactive quizzes and visual timelines.">
+<link rel="canonical" href="https://cron-trainer.pages.dev">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Cron Trainer",
+  "description": "Interactive cron expression learning tool with quizzes, practice mode, and visual timelines.",
+  "url": "https://cron-trainer.pages.dev",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--accent2:#1f6feb;--green:#3fb950;--red:#f85149;--orange:#d29922;--purple:#bc8cff;--radius:8px}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 20px}
+
+/* Nav */
+nav{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+nav .container{display:flex;align-items:center;justify-content:space-between;height:56px;flex-wrap:wrap;gap:8px}
+nav h1{font-size:1.1rem;font-weight:700;white-space:nowrap}
+nav h1 span{color:var(--accent)}
+nav ul{display:flex;list-style:none;gap:4px;flex-wrap:wrap}
+nav li a{padding:6px 12px;border-radius:var(--radius);font-size:.875rem;color:var(--text2);transition:all .15s}
+nav li a:hover,nav li a.active{background:var(--surface2);color:var(--text);text-decoration:none}
+
+/* Hero */
+.hero{text-align:center;padding:60px 20px 40px}
+.hero h2{font-size:2.5rem;font-weight:800;margin-bottom:12px}
+.hero h2 span{background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:1.1rem;max-width:540px;margin:0 auto 28px}
+.hero-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius);font-size:.9rem;font-weight:600;border:none;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--accent2);color:#fff}
+.btn-primary:hover{background:var(--accent)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent)}
+
+/* Sections */
+section{padding:50px 20px}
+section h3{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+section h4{font-size:1.15rem;font-weight:600;margin-bottom:6px}
+section>p,section>.section-desc{color:var(--text2);margin-bottom:24px}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:var(--radius);font-size:.85rem;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);border:1px solid transparent;transition:all .15s}
+.tab:hover{background:var(--surface2)}
+.tab.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+
+/* Lessons */
+.field-table{width:100%;border-collapse:collapse;margin:16px 0}
+.field-table th,.field-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:.9rem}
+.field-table th{color:var(--text2);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px}
+.field-table code{background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:.85rem;color:var(--accent)}
+
+/* Quiz */
+.quiz-area{min-height:300px}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+.quiz-score{font-size:.9rem;color:var(--text2)}
+.quiz-score strong{color:var(--accent)}
+.quiz-progress{height:4px;background:var(--surface2);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.quiz-progress-bar{height:100%;background:var(--accent2);border-radius:2px;transition:width .3s}
+.quiz-question{font-size:1.1rem;margin-bottom:20px;font-weight:600}
+.quiz-cron{font-family:'SF Mono',Monaco,Consolas,monospace;font-size:1.4rem;background:var(--surface2);padding:12px 20px;border-radius:var(--radius);display:inline-block;margin:8px 0 16px;border:1px solid var(--border)}
+.quiz-choices{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.choice{padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--surface);transition:all .15s;font-size:.9rem}
+.choice:hover{border-color:var(--accent);background:var(--surface2)}
+.choice.correct{border-color:var(--green);background:rgba(63,185,80,.1);color:var(--green)}
+.choice.wrong{border-color:var(--red);background:rgba(248,81,73,.1);color:var(--red)}
+.choice.selected{border-color:var(--accent);background:rgba(88,166,255,.1)}
+.quiz-input{font-family:'SF Mono',Monaco,Consolas,monospace;font-size:1.2rem;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);width:100%;max-width:400px;outline:none;transition:border-color .15s}
+.quiz-input:focus{border-color:var(--accent)}
+.quiz-feedback{padding:12px 16px;border-radius:var(--radius);margin-bottom:16px;font-size:.9rem}
+.quiz-feedback.correct{background:rgba(63,185,80,.1);color:var(--green);border:1px solid var(--green)}
+.quiz-feedback.wrong{background:rgba(248,81,73,.1);color:var(--red);border:1px solid var(--red)}
+.difficulty-badges{display:flex;gap:6px;margin-bottom:16px}
+.badge{padding:4px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-beginner{background:rgba(63,185,80,.15);color:var(--green)}
+.badge-intermediate{background:rgba(210,153,34,.15);color:var(--orange)}
+.badge-advanced{background:rgba(248,81,73,.15);color:var(--red)}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.timeline-item{display:flex;align-items:center;gap:12px;padding:8px 0}
+.timeline-dot{width:12px;height:12px;border-radius:50%;background:var(--accent2);flex-shrink:0;position:relative}
+.timeline-dot::after{content:'';position:absolute;top:12px;left:5px;width:2px;height:20px;background:var(--border)}
+.timeline-item:last-child .timeline-dot::after{display:none}
+.timeline-label{font-size:.7rem;color:var(--text2);width:60px;flex-shrink:0;text-transform:uppercase}
+.timeline-value{font-family:'SF Mono',Monaco,Consolas,monospace;font-size:.9rem}
+
+/* Practice */
+.practice-input-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.practice-input-row .quiz-input{max-width:none;flex:1;min-width:200px}
+
+/* Features */
+.feature-icon{font-size:2rem;margin-bottom:8px}
+
+/* FAQ */
+.faq-item{border-bottom:1px solid var(--border);padding:16px 0}
+.faq-q{font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.faq-q::after{content:'+';font-size:1.2rem;color:var(--text2);transition:transform .2s}
+.faq-item.open .faq-q::after{content:'−'}
+.faq-a{color:var(--text2);margin-top:8px;display:none;font-size:.9rem}
+.faq-item.open .faq-a{display:block}
+
+/* Email */
+.email-form{display:flex;gap:8px;max-width:400px}
+.email-form input{flex:1;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.9rem;outline:none}
+.email-form input:focus{border-color:var(--accent)}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:30px 20px;text-align:center;color:var(--text2);font-size:.85rem}
+footer a{margin:0 8px}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:var(--radius);font-size:.9rem;z-index:1000;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.hidden{display:none!important}
+
+@media(max-width:600px){
+  .hero h2{font-size:1.8rem}
+  nav .container{height:auto;padding:12px 20px}
+  .quiz-cron{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="container">
+    <h1>⏱ <span>Cron</span>Trainer</h1>
+    <ul>
+      <li><a href="#lessons" class="active">Lessons</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#practice">Practice</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <h2>Master <span>Cron Expressions</span></h2>
+  <p>Learn cron syntax through interactive lessons, challenging quizzes, and real-time visual timelines.</p>
+  <div class="hero-buttons">
+    <a href="#lessons" class="btn btn-primary">Start Learning</a>
+    <a href="#quiz" class="btn btn-secondary">Take the Quiz</a>
+  </div>
+</section>
+
+<section id="lessons">
+  <div class="container">
+    <h3>📚 Interactive Lessons</h3>
+    <p class="section-desc">Cron expressions have 5 fields separated by spaces. Each field controls when a job runs.</p>
+    <div class="card">
+      <table class="field-table">
+        <thead><tr><th>Field</th><th>Allowed Values</th><th>Special Characters</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Minute</strong></td><td>0–59</td><td>* , - /</td><td><code>*/15</code> = every 15 min</td></tr>
+          <tr><td><strong>Hour</strong></td><td>0–23</td><td>* , - /</td><td><code>9-17</code> = 9 AM to 5 PM</td></tr>
+          <tr><td><strong>Day of Month</strong></td><td>1–31</td><td>* , - /</td><td><code>1,15</code> = 1st and 15th</td></tr>
+          <tr><td><strong>Month</strong></td><td>1–12</td><td>* , - /</td><td><code>*/3</code> = every 3 months</td></tr>
+          <tr><td><strong>Day of Week</strong></td><td>0–6 (Sun–Sat)</td><td>* , - /</td><td><code>1-5</code> = Mon–Fri</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:24px">
+      <div class="tabs" id="lesson-tabs">
+        <button class="tab active" data-tab="wildcard">Asterisk *</button>
+        <button class="tab" data-tab="comma">Comma ,</button>
+        <button class="tab" data-tab="hyphen">Hyphen -</button>
+        <button class="tab" data-tab="slash">Slash /</button>
+        <button class="tab" data-tab="combined">Combined</button>
+      </div>
+      <div class="card" id="lesson-content">
+        <div id="tab-wildcard">
+          <h4>Asterisk <code>*</code> — Every Value</h4>
+          <p style="color:var(--text2);margin:8px 0">The asterisk means "every possible value" for that field.</p>
+          <p><code>* * * * *</code> → Every minute of every hour, every day.</p>
+          <p><code>30 * * * *</code> → Minute 30 of every hour (1:30, 2:30, 3:30…)</p>
+          <p><code>0 * * * *</code> → Top of every hour (1:00, 2:00, 3:00…)</p>
+        </div>
+        <div id="tab-comma" class="hidden">
+          <h4>Comma <code>,</code> — List of Values</h4>
+          <p style="color:var(--text2);margin:8px 0">Separate individual values with commas.</p>
+          <p><code>0 9,12,18 * * *</code> → At 9:00, 12:00, and 18:00 every day.</p>
+          <p><code>0 0 1,15 * *</code> → Midnight on the 1st and 15th of every month.</p>
+          <p><code>0 0 * * 0,6</code> → Midnight every Saturday and Sunday.</p>
+        </div>
+        <div id="tab-hyphen" class="hidden">
+          <h4>Hyphen <code>-</code> — Range of Values</h4>
+          <p style="color:var(--text2);margin:8px 0">Define a continuous range between two values.</p>
+          <p><code>0 9-17 * * *</code> → Every hour from 9 AM to 5 PM.</p>
+          <p><code>0 0 * * 1-5</code> → Midnight Monday through Friday.</p>
+          <p><code>30 1-3 * * *</code> → 1:30, 2:30, and 3:30 AM every day.</p>
+        </div>
+        <div id="tab-slash" class="hidden">
+          <h4>Slash <code>/</code> — Step Values</h4>
+          <p style="color:var(--text2);margin:8px 0">Skip values in steps. <code>*/N</code> means "every Nth value."</p>
+          <p><code>*/15 * * * *</code> → Every 15 minutes (0, 15, 30, 45).</p>
+          <p><code>0 */2 * * *</code> → Every 2 hours (0:00, 2:00, 4:00…).</p>
+          <p><code>0 0 */3 * *</code> → Every 3 days at midnight.</p>
+        </div>
+        <div id="tab-combined" class="hidden">
+          <h4>Combined Expressions</h4>
+          <p style="color:var(--text2);margin:8px 0">Mix special characters for precise schedules.</p>
+          <p><code>30 9 * * 1-5</code> → 9:30 AM Monday–Friday.</p>
+          <p><code>0 */6 * * 1-5</code> → Every 6 hours on weekdays (0:00, 6:00, 12:00, 18:00).</p>
+          <p><code>15,45 8-18 * * 1-5</code> → :15 and :45 past each hour, 8 AM–6 PM, weekdays.</p>
+          <p><code>0 0 1 1,7 *</code> → Midnight on Jan 1st and Jul 1st.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="container">
+    <h3>🎯 Quiz Mode</h3>
+    <p class="section-desc">Test your knowledge with 20 questions across three difficulty levels.</p>
+    <div class="difficulty-badges" id="diff-display"></div>
+    <div class="card quiz-area" id="quiz-area">
+      <div id="quiz-start">
+        <p style="margin-bottom:16px">Choose difficulty:</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="startQuiz('beginner')">Beginner</button>
+          <button class="btn btn-primary" onclick="startQuiz('intermediate')">Intermediate</button>
+          <button class="btn btn-primary" onclick="startQuiz('advanced')">Advanced</button>
+          <button class="btn btn-secondary" onclick="startQuiz('mixed')">Mixed (All Levels)</button>
+        </div>
+        <p style="margin-top:16px;color:var(--text2);font-size:.85rem" id="past-score"></p>
+      </div>
+      <div id="quiz-active" class="hidden">
+        <div class="quiz-header">
+          <span class="quiz-score">Question <strong id="q-num">1</strong>/20</span>
+          <span class="quiz-score">Score: <strong id="q-score">0</strong></span>
+        </div>
+        <div class="quiz-progress"><div class="quiz-progress-bar" id="q-bar" style="width:5%"></div></div>
+        <div id="quiz-body"></div>
+      </div>
+      <div id="quiz-results" class="hidden" style="text-align:center;padding:20px 0">
+        <h4 id="result-title"></h4>
+        <p style="font-size:2rem;margin:16px 0" id="result-score"></p>
+        <p style="color:var(--text2);margin-bottom:20px" id="result-msg"></p>
+        <button class="btn btn-primary" onclick="showQuizStart()">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="practice">
+  <div class="container">
+    <h3>🔧 Practice Mode</h3>
+    <p class="section-desc">Type any cron expression and see its next 5 fire times on a visual timeline.</p>
+    <div class="card">
+      <div class="practice-input-row">
+        <input class="quiz-input" id="practice-expr" placeholder="*/15 * * * *" spellcheck="false">
+        <button class="btn btn-primary" onclick="runPractice()">Calculate</button>
+      </div>
+      <div id="practice-error" style="color:var(--red);font-size:.85rem;margin-bottom:8px" class="hidden"></div>
+      <div id="practice-timeline"></div>
+      <div style="margin-top:12px;font-size:.85rem;color:var(--text2)" id="practice-desc"></div>
+    </div>
+  </div>
+</section>
+
+<section id="timeline-section">
+  <div class="container">
+    <h3>📅 Visual Timeline</h3>
+    <p class="section-desc">See when your cron expression fires next.</p>
+    <div class="card">
+      <div class="practice-input-row">
+        <input class="quiz-input" id="timeline-expr" value="0 9 * * 1-5" spellcheck="false">
+        <button class="btn btn-primary" onclick="runTimeline()">Show Timeline</button>
+      </div>
+      <div id="timeline-result" class="timeline"></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <h3>✨ Features</h3>
+    <div class="cards" style="margin-top:20px">
+      <div class="card" style="text-align:center">
+        <div class="feature-icon">🎯</div>
+        <h4>Adaptive Quizzes</h4>
+        <p style="color:var(--text2);font-size:.9rem">20-question quizzes across three difficulty levels. Multiple choice and free-form answer types to solidify your cron knowledge.</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="feature-icon">📅</div>
+        <h4>Visual Timelines</h4>
+        <p style="color:var(--text2);font-size:.9rem">See the next 5 fire times for any cron expression rendered on an interactive timeline. Instantly verify your expressions are correct.</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="feature-icon">📊</div>
+        <h4>Score Tracking</h4>
+        <p style="color:var(--text2);font-size:.9rem">Your quiz scores are saved in your browser so you can track improvement over time. See your best scores per difficulty level.</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="feature-icon">📚</div>
+        <h4>Interactive Lessons</h4>
+        <p style="color:var(--text2);font-size:.9rem">Step-by-step lessons covering wildcards, commas, ranges, steps, and complex combined expressions. Learn at your own pace.</p>
+      </div>
+    </div>
+    <div style="margin-top:32px">
+      <h4>More Tools You Might Like</h4>
+      <div class="cards" style="margin-top:12px">
+        <div class="card"><a href="https://crontab.guru" target="_blank">crontab.guru</a><p style="color:var(--text2);font-size:.85rem">Online cron expression editor and validator.</p></div>
+        <div class="card"><a href="https://crontab.org" target="_blank">crontab.org</a><p style="color:var(--text2);font-size:.85rem">Official crontab documentation and reference.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <h3>❓ Frequently Asked Questions</h3>
+    <div class="card" style="margin-top:16px">
+      <div class="faq-item">
+        <div class="faq-q">What is a cron expression?</div>
+        <div class="faq-a">A cron expression is a string of 5 fields separated by spaces that defines a schedule. The fields are: minute (0–59), hour (0–23), day of month (1–31), month (1–12), and day of week (0–6, where 0 = Sunday). It's used in Unix-like operating systems and many cloud services to schedule recurring tasks.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the difference between day-of-month and day-of-week?</div>
+        <div class="faq-a">They're both evaluated independently. If both are restricted (not <code>*</code>), the cron fires when <em>either</em> condition matches. For example, <code>0 0 1 * 5</code> fires at midnight on the 1st of the month <strong>and</strong> every Friday. To fire only on the 1st <em>when it's a Friday</em>, some cron implementations use the <code>?</code> character.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How are quiz scores saved?</div>
+        <div class="faq-a">Scores are stored in your browser's localStorage. No data is sent to any server. Your scores persist across sessions on the same device and browser. Clear your browser data to reset scores.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="email">
+  <div class="container">
+    <h3>📬 Get Cron Tips</h3>
+    <p class="section-desc">Enter your email to receive weekly cron tips and quiz challenges.</p>
+    <div class="card" style="margin-top:12px">
+      <form class="email-form" onsubmit="handleEmail(event)">
+        <input type="email" placeholder="you@example.com" required id="email-input">
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+      <p style="color:var(--text2);font-size:.8rem;margin-top:8px">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2026 Cron Trainer — <a href="#lessons">Lessons</a> <a href="#quiz">Quiz</a> <a href="#practice">Practice</a> <a href="#faq">FAQ</a></p>
+  </div>
+</footer>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+// ── Cron Engine ──
+function parseCronField(field, min, max) {
+  const values = new Set();
+  for (const part of field.split(',')) {
+    let step = 1;
+    let range = part;
+    if (part.includes('/')) {
+      const [r, s] = part.split('/');
+      range = r;
+      step = parseInt(s, 10);
+      if (isNaN(step) || step < 1) throw new Error('Invalid step: ' + part);
+    }
+    let start, end;
+    if (range === '*') {
+      start = min; end = max;
+    } else if (range.includes('-')) {
+      const [a, b] = range.split('-');
+      start = parseInt(a, 10); end = parseInt(b, 10);
+    } else {
+      start = end = parseInt(range, 10);
+    }
+    if (isNaN(start) || isNaN(end)) throw new Error('Invalid range: ' + part);
+    for (let i = start; i <= end; i += step) {
+      if (i >= min && i <= max) values.add(i);
+    }
+  }
+  return [...values].sort((a, b) => a - b);
+}
+
+function getNextFireTimes(expr, count = 5, from = new Date()) {
+  const parts = expr.trim().split(/\s+/);
+  if (parts.length !== 5) throw new Error('Cron must have 5 fields');
+  const minutes = parseCronField(parts[0], 0, 59);
+  const hours = parseCronField(parts[1], 0, 23);
+  const days = parseCronField(parts[2], 1, 31);
+  const months = parseCronField(parts[3], 1, 12);
+  const weekdays = parseCronField(parts[4], 0, 6);
+  if (!minutes.length || !hours.length || !days.length || !months.length || !weekdays.length)
+    throw new Error('Empty field expansion');
+
+  const results = [];
+  const d = new Date(from.getTime());
+  d.setSeconds(0, 0);
+  d.setMinutes(d.getMinutes() + 1);
+  const limit = new Date(from.getTime() + 366 * 86400000);
+  while (results.length < count && d < limit) {
+    if (months.includes(d.getMonth() + 1) &&
+        (days.includes(d.getDate()) || weekdays.includes(d.getDay())) &&
+        hours.includes(d.getHours()) &&
+        minutes.includes(d.getMinutes())) {
+      results.push(new Date(d.getTime()));
+    }
+    d.setMinutes(d.getMinutes() + 1);
+  }
+  return results;
+}
+
+function describeCron(expr) {
+  const parts = expr.trim().split(/\s+/);
+  if (parts.length !== 5) return 'Invalid expression';
+  const descField = (f, labels) => {
+    if (f === '*') return 'every ' + labels.plural;
+    return f;
+  };
+  const m = descField(parts[0], { plural: 'minute' });
+  const h = descField(parts[1], { plural: 'hour' });
+  const dm = descField(parts[2], { plural: 'day' });
+  const mo = descField(parts[3], { plural: 'month' });
+  const dw = descField(parts[4], { plural: 'weekday' });
+  return `Minute: ${m}, Hour: ${h}, Day: ${dm}, Month: ${mo}, Weekday: ${dw}`;
+}
+
+function formatDate(d) {
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const pad = n => String(n).padStart(2,'0');
+  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} at ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// ── Lesson Tabs ──
+document.querySelectorAll('#lesson-tabs .tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#lesson-tabs .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('#lesson-content > div').forEach(d => d.classList.add('hidden'));
+    document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
+  });
+});
+
+// ── FAQ Toggle ──
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+
+// ── Toast ──
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), duration);
+}
+
+// ── Practice Mode ──
+function runPractice() {
+  const expr = document.getElementById('practice-expr').value.trim();
+  const errEl = document.getElementById('practice-error');
+  const tlEl = document.getElementById('practice-timeline');
+  const descEl = document.getElementById('practice-desc');
+  errEl.classList.add('hidden');
+  tlEl.innerHTML = '';
+  descEl.textContent = '';
+  if (!expr) { errEl.textContent = 'Enter a cron expression.'; errEl.classList.remove('hidden'); return; }
+  try {
+    const times = getNextFireTimes(expr, 5);
+    tlEl.innerHTML = renderTimeline(times);
+    descEl.textContent = describeCron(expr);
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.classList.remove('hidden');
+  }
+}
+
+function runTimeline() {
+  const expr = document.getElementById('timeline-expr').value.trim();
+  const el = document.getElementById('timeline-result');
+  el.innerHTML = '';
+  if (!expr) return;
+  try {
+    el.innerHTML = renderTimeline(getNextFireTimes(expr, 5));
+  } catch (e) {
+    el.innerHTML = `<span style="color:var(--red);font-size:.85rem">${e.message}</span>`;
+  }
+}
+
+function renderTimeline(times) {
+  return times.map((t, i) => `
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <span class="timeline-label">${i === 0 ? 'Next' : '+' + Math.round((t - times[0]) / 60000) + 'm'}</span>
+      <span class="timeline-value">${formatDate(t)}</span>
+    </div>`).join('');
+}
+
+// ── Quiz Engine ──
+const QUIZ_BANK = {
+  beginner: [
+    { type: 'read', cron: '* * * * *', answer: 'Every minute', choices: ['Every minute','Every hour','Every day','Every second'] },
+    { type: 'read', cron: '0 * * * *', answer: 'Every hour on the hour', choices: ['Every hour on the hour','Every minute','Every day at midnight','Every 0th minute'] },
+    { type: 'read', cron: '0 0 * * *', answer: 'Midnight every day', choices: ['Midnight every day','Every hour','Every minute','Once a week'] },
+    { type: 'read', cron: '30 * * * *', answer: 'Every hour at minute 30', choices: ['Every hour at minute 30','Every 30 minutes','Once at 3:00','Every half hour'] },
+    { type: 'read', cron: '0 12 * * *', answer: 'Noon every day', choices: ['Noon every day','Midnight every day','12 minutes past every hour','Every 12 hours'] },
+    { type: 'read', cron: '0 0 * * 0', answer: 'Midnight every Sunday', choices: ['Midnight every Sunday','Midnight every day','Midnight every Saturday','Once a month'] },
+    { type: 'write', desc: 'Every minute of every day', answer: '* * * * *' },
+    { type: 'write', desc: 'Every hour on the hour', answer: '0 * * * *' },
+    { type: 'write', desc: 'Midnight every day', answer: '0 0 * * *' },
+    { type: 'read', cron: '0 0 1 * *', answer: 'Midnight on the 1st of every month', choices: ['Midnight on the 1st of every month','Midnight every day','Once a year','Every Monday'] },
+    { type: 'read', cron: '0 0 1 1 *', answer: 'Midnight on January 1st', choices: ['Midnight on January 1st','Midnight on the 1st of every month','Every day in January','Every month on the 1st'] },
+    { type: 'write', desc: 'Every day at noon', answer: '0 12 * * *' },
+    { type: 'write', desc: 'Every Sunday at midnight', answer: '0 0 * * 0' },
+    { type: 'read', cron: '0 0 * * 1', answer: 'Midnight every Monday', choices: ['Midnight every Monday','Midnight every day','Midnight on the 1st','Every minute'] },
+  ],
+  intermediate: [
+    { type: 'read', cron: '0 9,17 * * *', answer: '9:00 AM and 5:00 PM every day', choices: ['9:00 AM and 5:00 PM every day','9 AM to 5 PM every day','Every 9 hours','Every 17 minutes'] },
+    { type: 'read', cron: '0 9-17 * * *', answer: 'Every hour from 9 AM to 5 PM', choices: ['Every hour from 9 AM to 5 PM','9:00 and 17:00 only','9 AM to 5 PM once','Every 9 hours'] },
+    { type: 'read', cron: '0 0 1,15 * *', answer: 'Midnight on the 1st and 15th', choices: ['Midnight on the 1st and 15th','Every 15 days','1st through 15th midnight','Every day'] },
+    { type: 'read', cron: '0 0 * * 1-5', answer: 'Midnight Monday through Friday', choices: ['Midnight Monday through Friday','Midnight on the 1st to 5th','Every 5 days','Every weekday at 5 AM'] },
+    { type: 'read', cron: '0 9 * * 1-5', answer: '9:00 AM every weekday', choices: ['9:00 AM every weekday','9 AM every day','9 AM Monday only','Every 9 hours on weekdays'] },
+    { type: 'write', desc: '9 AM and 5 PM every day', answer: '0 9,17 * * *' },
+    { type: 'write', desc: 'Every hour from 9 AM to 5 PM', answer: '0 9-17 * * *' },
+    { type: 'write', desc: 'Midnight on the 1st and 15th of every month', answer: '0 0 1,15 * *' },
+    { type: 'write', desc: 'Midnight every weekday (Mon–Fri)', answer: '0 0 * * 1-5' },
+    { type: 'read', cron: '30 8 * * 1,3,5', answer: '8:30 AM on Monday, Wednesday, Friday', choices: ['8:30 AM on Monday, Wednesday, Friday','8:30 AM on weekdays','8:30 every day','8:30 on the 1st, 3rd, 5th'] },
+    { type: 'read', cron: '0 0 1-7 * 1', answer: 'Midnight on the 1st–7th AND every Monday', choices: ['Midnight on the 1st–7th AND every Monday','Midnight on the first Monday only','Midnight every day','First Monday of every month'] },
+    { type: 'write', desc: 'Every weekday at 9:30 AM', answer: '30 9 * * 1-5' },
+    { type: 'read', cron: '0 6,18 * * *', answer: '6:00 AM and 6:00 PM every day', choices: ['6:00 AM and 6:00 PM every day','Every 6 hours','6 AM to 6 PM','6 AM every day'] },
+  ],
+  advanced: [
+    { type: 'read', cron: '*/15 * * * *', answer: 'Every 15 minutes', choices: ['Every 15 minutes','Every 15 hours','At minute 15','Every hour at :15'] },
+    { type: 'read', cron: '0 */2 * * *', answer: 'Every 2 hours', choices: ['Every 2 hours','Every 2 minutes','At 2 AM','Every other day'] },
+    { type: 'read', cron: '0 0 */3 * *', answer: 'Every 3 days at midnight', choices: ['Every 3 days at midnight','Every 3 hours','3rd of every month','Every 3 minutes'] },
+    { type: 'read', cron: '*/10 9-17 * * 1-5', answer: 'Every 10 minutes during business hours on weekdays', choices: ['Every 10 minutes during business hours on weekdays','Every 10 hours on weekdays','10 AM to 5 PM weekdays','Every 10 minutes all day'] },
+    { type: 'read', cron: '0 0 1 */3 *', answer: 'Midnight on the 1st every 3 months', choices: ['Midnight on the 1st every 3 months','Every 3 days','Every 3 hours at midnight','Midnight on March 1st'] },
+    { type: 'write', desc: 'Every 15 minutes', answer: '*/15 * * * *' },
+    { type: 'write', desc: 'Every 2 hours', answer: '0 */2 * * *' },
+    { type: 'write', desc: 'Every 10 minutes during 9 AM–5 PM on weekdays', answer: '*/10 9-17 * * 1-5' },
+    { type: 'write', desc: 'Midnight every 3 days', answer: '0 0 */3 * *' },
+    { type: 'read', cron: '15,45 8-18 * * 1-5', answer: ':15 and :45 every hour from 8 AM to 6 PM on weekdays', choices: [':15 and :45 every hour from 8 AM to 6 PM on weekdays','8:15 and 6:45 on weekdays','Every 15 minutes on weekdays','8:15 AM and 18:45 PM'] },
+    { type: 'read', cron: '0 0 1 1,7 *', answer: 'Midnight on Jan 1st and Jul 1st', choices: ['Midnight on Jan 1st and Jul 1st','Midnight on the 1st and 7th','Every January and July','Every 7 days'] },
+    { type: 'write', desc: 'Every 30 minutes', answer: '*/30 * * * *' },
+    { type: 'read', cron: '0 8-18/2 * * *', answer: 'Every 2 hours from 8 AM to 6 PM', choices: ['Every 2 hours from 8 AM to 6 PM','8 AM and 6 PM only','8 AM to 18 PM every day','Every 2 minutes'] },
+    { type: 'write', desc: 'Every 6 hours on weekdays', answer: '0 */6 * * 1-5' },
+  ]
+};
+
+let quiz = { questions: [], current: 0, score: 0, answered: false, difficulty: 'mixed' };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function startQuiz(diff) {
+  quiz.difficulty = diff;
+  const diffs = diff === 'mixed' ? ['beginner','intermediate','advanced'] : [diff];
+  let pool = [];
+  diffs.forEach(d => { pool = pool.concat(shuffle(QUIZ_BANK[d]).map(q => ({...q, level: d}))); });
+  quiz.questions = shuffle(pool).slice(0, 20);
+  quiz.current = 0;
+  quiz.score = 0;
+  quiz.answered = false;
+  document.getElementById('quiz-start').classList.add('hidden');
+  document.getElementById('quiz-results').classList.add('hidden');
+  document.getElementById('quiz-active').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quiz.questions[quiz.current];
+  const body = document.getElementById('quiz-body');
+  document.getElementById('q-num').textContent = quiz.current + 1;
+  document.getElementById('q-score').textContent = quiz.score;
+  document.getElementById('q-bar').style.width = ((quiz.current + 1) / 20 * 100) + '%';
+  quiz.answered = false;
+
+  const badgeClass = q.level === 'beginner' ? 'badge-beginner' : q.level === 'intermediate' ? 'badge-intermediate' : 'badge-advanced';
+  document.getElementById('diff-display').innerHTML = `<span class="badge ${badgeClass}">${q.level}</span>`;
+
+  let html = '';
+  if (q.type === 'read') {
+    html = `<p class="quiz-question">What does this cron expression mean?</p>
+      <div class="quiz-cron">${q.cron}</div>
+      <div class="quiz-choices" id="choices">`;
+    q.choices.forEach((c, i) => { html += `<div class="choice" data-idx="${i}" onclick="pickChoice(${i})">${c}</div>`; });
+    html += `</div><div id="quiz-feedback-area"></div>
+      <button class="btn btn-primary hidden" id="next-btn" onclick="nextQuestion()">Next →</button>`;
+  } else {
+    html = `<p class="quiz-question">Write the cron expression for:</p>
+      <div class="quiz-cron" style="font-family:inherit;font-size:1.1rem;background:transparent;border:none;padding:0">${q.desc}</div>
+      <div style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input class="quiz-input" id="write-answer" placeholder="* * * * *" spellcheck="false" autocomplete="off">
+        <button class="btn btn-primary" onclick="checkWrite()">Check</button>
+      </div>
+      <div id="quiz-feedback-area"></div>
+      <button class="btn btn-primary hidden" id="next-btn" onclick="nextQuestion()">Next →</button>`;
+  }
+  body.innerHTML = html;
+  const inp = document.getElementById('write-answer');
+  if (inp) { inp.focus(); inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkWrite(); }); }
+}
+
+function pickChoice(idx) {
+  if (quiz.answered) return;
+  quiz.answered = true;
+  const q = quiz.questions[quiz.current];
+  const choices = document.querySelectorAll('#choices .choice');
+  const correct = q.choices.indexOf(q.answer);
+  choices.forEach((c, i) => {
+    if (i === correct) c.classList.add('correct');
+    if (i === idx && i !== correct) c.classList.add('wrong');
+  });
+  const fb = document.getElementById('quiz-feedback-area');
+  if (idx === correct) {
+    quiz.score++;
+    fb.innerHTML = `<div class="quiz-feedback correct">✓ Correct!</div>`;
+  } else {
+    fb.innerHTML = `<div class="quiz-feedback wrong">✗ Correct answer: ${q.answer}</div>`;
+  }
+  document.getElementById('q-score').textContent = quiz.score;
+  document.getElementById('next-btn').classList.remove('hidden');
+}
+
+function normalizeCron(s) {
+  return s.trim().replace(/\s+/g, ' ');
+}
+
+function checkWrite() {
+  if (quiz.answered) return;
+  const inp = document.getElementById('write-answer');
+  if (!inp) return;
+  const val = normalizeCron(inp.value);
+  const q = quiz.questions[quiz.current];
+  quiz.answered = true;
+  const fb = document.getElementById('quiz-feedback-area');
+  if (val === normalizeCron(q.answer)) {
+    quiz.score++;
+    fb.innerHTML = `<div class="quiz-feedback correct">✓ Correct!</div>`;
+  } else {
+    fb.innerHTML = `<div class="quiz-feedback wrong">✗ Correct answer: <code>${q.answer}</code></div>`;
+  }
+  document.getElementById('q-score').textContent = quiz.score;
+  document.getElementById('next-btn').classList.remove('hidden');
+}
+
+function nextQuestion() {
+  quiz.current++;
+  if (quiz.current >= quiz.questions.length) {
+    finishQuiz();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishQuiz() {
+  document.getElementById('quiz-active').classList.add('hidden');
+  document.getElementById('quiz-results').classList.remove('hidden');
+  const pct = Math.round(quiz.score / quiz.questions.length * 100);
+  document.getElementById('result-score').textContent = `${quiz.score}/${quiz.questions.length}`;
+  if (pct >= 90) {
+    document.getElementById('result-title').textContent = '🏆 Cron Master!';
+    document.getElementById('result-msg').textContent = 'Outstanding! You really know your cron expressions.';
+  } else if (pct >= 70) {
+    document.getElementById('result-title').textContent = '👍 Great Job!';
+    document.getElementById('result-msg').textContent = 'Solid understanding. Review the tricky ones and try again.';
+  } else if (pct >= 50) {
+    document.getElementById('result-title').textContent = '📖 Keep Learning';
+    document.getElementById('result-msg').textContent = 'You\'re getting there. Review the lessons and try again.';
+  } else {
+    document.getElementById('result-title').textContent = '💪 Don\'t Give Up';
+    document.getElementById('result-msg').textContent = 'Start with the lessons, then come back for another quiz.';
+  }
+  saveScore(quiz.difficulty, quiz.score, quiz.questions.length);
+}
+
+function saveScore(diff, correct, total) {
+  try {
+    const key = 'cron-trainer-scores';
+    const scores = JSON.parse(localStorage.getItem(key) || '{}');
+    if (!scores[diff] || correct/total > scores[diff].best) {
+      scores[diff] = { best: correct/total, correct, total, date: new Date().toISOString() };
+    }
+    if (!scores.totalRuns) scores.totalRuns = 0;
+    scores.totalRuns++;
+    localStorage.setItem(key, JSON.stringify(scores));
+  } catch(e) {}
+}
+
+function showQuizStart() {
+  document.getElementById('quiz-active').classList.add('hidden');
+  document.getElementById('quiz-results').classList.add('hidden');
+  document.getElementById('quiz-start').classList.remove('hidden');
+  document.getElementById('diff-display').innerHTML = '';
+  loadPastScore();
+}
+
+function loadPastScore() {
+  try {
+    const scores = JSON.parse(localStorage.getItem('cron-trainer-scores') || '{}');
+    const parts = [];
+    ['beginner','intermediate','advanced','mixed'].forEach(d => {
+      if (scores[d]) parts.push(`${d}: ${Math.round(scores[d].best*100)}%`);
+    });
+    if (parts.length) {
+      document.getElementById('past-score').textContent = 'Your best scores: ' + parts.join(' | ');
+    }
+  } catch(e) {}
+}
+
+// ── Email ──
+function handleEmail(e) {
+  e.preventDefault();
+  const email = document.getElementById('email-input').value;
+  showToast(`Thanks! ${email} subscribed to cron tips.`);
+  document.getElementById('email-input').value = '';
+}
+
+// ── Nav active ──
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+
+// ── Init ──
+loadPastScore();
+runTimeline();
+
+// Enter key in practice/timeline
+document.getElementById('practice-expr').addEventListener('keydown', e => { if (e.key === 'Enter') runPractice(); });
+document.getElementById('timeline-expr').addEventListener('keydown', e => { if (e.key === 'Enter') runTimeline(); });
+</script>
+</body>
+</html>

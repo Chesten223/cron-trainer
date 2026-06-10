@@ -285,6 +285,7 @@ footer a{margin:0 8px}
       <div id="practice-error" style="color:var(--red);font-size:.85rem;margin-bottom:8px" class="hidden"></div>
       <div id="practice-timeline"></div>
       <div style="margin-top:12px;font-size:.85rem;color:var(--text2)" id="practice-desc"></div>
+      <div style="margin-top:12px"><button class="btn btn-secondary" onclick="copyPracticeCron()">📋 Copy Cron</button></div>
     </div>
   </div>
 </section>
@@ -296,7 +297,7 @@ footer a{margin:0 8px}
     <div class="card">
       <div class="practice-input-row">
         <input class="quiz-input" id="timeline-expr" value="0 9 * * 1-5" spellcheck="false">
-        <button class="btn btn-primary" onclick="runTimeline()">Show Timeline</button>
+        <button class="btn btn-primary" onclick="runTimeline()">Show Timeline</button><button class="btn btn-secondary" onclick="copyTimelineCron()">📋 Copy Cron</button>
       </div>
       <div id="timeline-result" class="timeline"></div>
     </div>
@@ -524,6 +525,19 @@ function renderTimeline(times) {
     </div>`).join('');
 }
 
+function copyPracticeCron(){
+  const expr=document.getElementById('practice-expr').value.trim();
+  if(!expr)return;
+  const desc=document.getElementById('practice-desc').textContent;
+  const text=desc?expr+'\n'+desc:expr;
+  navigator.clipboard.writeText(text).then(()=>{const btn=event.target;const o=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=o,2000)});
+}
+
+function copyTimelineCron(){
+  const expr=document.getElementById('timeline-expr').value.trim();
+  if(!expr)return;
+  navigator.clipboard.writeText(expr).then(()=>{const btn=event.target;const o=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=o,2000)});
+}
 // ── Quiz Engine ──
 const QUIZ_BANK = {
   beginner: [
